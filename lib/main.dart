@@ -3,11 +3,24 @@ import 'package:namer_app/pages/home.dart';
 import 'package:namer_app/pages/profile.dart';
 import 'package:namer_app/styles/colors.dart';
 import 'package:namer_app/styles/texts.dart';
+import 'package:namer_app/utils/provider/auth.dart';
+import 'package:namer_app/utils/provider/global_navigator.dart';
+import 'package:namer_app/utils/provider/marketplace.dart';
+import 'package:namer_app/utils/services/auth.dart';
+import 'package:namer_app/utils/services/marketplace.dart';
 import 'package:namer_app/widgets/common/not_found.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  AuthService().init();
+  MarketplaceService().init();
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: (context) => GlobalNavigator(),
+    ),
+    ChangeNotifierProvider(create: (context) => Auth()),
+    ChangeNotifierProvider(create: (context) => MarketplaceState())
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

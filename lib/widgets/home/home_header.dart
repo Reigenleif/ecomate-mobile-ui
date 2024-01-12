@@ -44,18 +44,39 @@ class HeaderTopPart extends StatelessWidget {
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(15), topRight: Radius.circular(15)),
       ),
-      child: Row(
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text("Jakarta, 20 Sunny"),
-          ),
-          Container(
-            alignment: Alignment.centerRight,
-            child: Text("AQI 50"),
-          ),
-        ],
-      ),
+      child: Container(
+          padding: EdgeInsets.all(12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(children: [
+                      Text("Jakarta",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: onPrimary, fontSize: 20)),
+                      Text("20°",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: onPrimary, fontSize: 20)),
+                    ])),
+              ),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(children: [
+                      Text("150",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: onPrimary, fontSize: 24)),
+                      Text("AQI US°",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: onPrimary, fontSize: 16)),
+                      Text("Unhealthy",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: onPrimary, fontSize: 24)),
+                    ])),
+              ),
+            ],
+          )),
     );
   }
 }
