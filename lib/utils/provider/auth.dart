@@ -6,7 +6,7 @@ class Auth extends ChangeNotifier {
   GoogleSignIn googleSignIn = GoogleSignIn(
       // Optional clientId
       // clientId: 'your-client_id.apps.googleusercontent.com',
-      clientId: "667013754483-cc8g3cn5if28v08vvmos5smfsac290k1.apps.googleusercontent.com",
+      clientId: "667013754483-1qq4uir1dttq03un2ejh5npb9q2h2s96.apps.googleusercontent.com",
       scopes: [
         'email',
         'https://www.googleapis.com/auth/contacts.readonly',

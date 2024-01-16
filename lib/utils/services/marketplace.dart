@@ -1,8 +1,10 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:grpc/grpc.dart';
 import 'package:namer_app/proto/main.pbgrpc.dart';
 
 class MarketplaceService {
-  String baseUrl = "localhost";
+  String baseUrl = dotenv.env["GRPC_SERVER_URL"] ?? "";
+  int port = int.parse(dotenv.env["GRPC_SERVER_PORT"] ?? "");
 
   MarketplaceService._internal();
   static final MarketplaceService _instance = MarketplaceService._internal();
@@ -24,10 +26,9 @@ class MarketplaceService {
   _createChannel() {
     final channel = ClientChannel(
       baseUrl,
-      port: 8080,
+      port: port,
       options: const ChannelOptions(),
     );
     _marketplaceServiceClient = MarketplaceClient(channel);
   }
-
 }

@@ -12,6 +12,7 @@ class StringInput extends FormBuilderTextField {
     bool? isAnEmail = false,
     int? minLength,
     int? maxLength,
+    obscureText = false,
   }) : super(name: label, initialValue: value, onChanged: onChange, validator: FormBuilderValidators.compose([
     ...isRequired ?? false ? [FormBuilderValidators.required()] : [],
     ...isAnEmail ?? false ? [FormBuilderValidators.email()] : [],

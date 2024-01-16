@@ -1,6 +1,6 @@
+import 'package:ecomate/styles/colors.dart';
+import 'package:ecomate/widgets/common/custom_card.dart';
 import 'package:flutter/material.dart';
-import 'package:namer_app/styles/colors.dart';
-import 'package:namer_app/widgets/common/custom_card.dart';
 
 class HomeHeader extends StatefulWidget {
   HomeHeader({Key? key, required this.onPressed}) : super(key: key);

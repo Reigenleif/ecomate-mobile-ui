@@ -1,5 +1,5 @@
+import 'package:ecomate/widgets/common/custom_card.dart';
 import 'package:flutter/material.dart';
-import 'package:namer_app/widgets/common/custom_card.dart';
 
 class ClickableCard extends CustomCard {
   ClickableCard({Key? key, required Widget child, required this.onPressed})

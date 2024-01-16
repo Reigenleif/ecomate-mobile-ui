@@ -1,8 +1,6 @@
+import 'package:ecomate/styles/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:namer_app/styles/colors.dart';
-import 'package:namer_app/utils/provider/global_navigator.dart';
-import 'package:namer_app/widgets/common/gradient_shader.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeButtonGroup extends StatelessWidget {
   HomeButtonGroup({Key? key}) : super(key: key);
@@ -10,37 +8,49 @@ class HomeButtonGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      ButtonBar(
-        buttonPadding: EdgeInsets.all(20),
-        alignment: MainAxisAlignment.center,
-        children: [
-          _RoundButton(
-            linkTo: "marketplace",
-            icon: Icon(Icons.shopping_cart),
-          ),
-          _RoundButton(
-            linkTo: "marketplace",
-            icon: Icon(Icons.calculate_outlined),
-          ),
-          _RoundButton(
-            linkTo: "marketplace",
-            icon: Icon(Icons.people_outline),
-          ),
-        ],
+      SizedBox(
+        width: 350,
+        child: Wrap(
+          alignment: WrapAlignment.spaceAround,
+          children: [
+            _RoundButton(
+              linkTo: "/unshell/marketplace/",
+              icon: Image.asset('assets/images/home/marketplace.png'),
+              title: "Marketplace",
+            ),
+            _RoundButton(
+              linkTo: "marketplace",
+              icon: Image(
+                  image: AssetImage('assets/images/home/carbonfootprint.png')),
+              title: "Carbon Calculator",
+            ),
+            _RoundButton(
+              linkTo: "marketplace",
+              icon: Image(image: AssetImage('assets/images/home/forum.png')),
+              title: "Forum",
+            ),
+          ],
+        ),
       ),
-      ButtonBar(
-        buttonPadding: EdgeInsets.all(20),
-        alignment: MainAxisAlignment.center,
-        children: [
-          _RoundButton(
-            linkTo: "marketplace",
-            icon: Icon(Icons.event),
+      Padding(
+        padding: const EdgeInsets.only(top: 40),
+        child: SizedBox(
+          width: 280,
+          child: Wrap(
+            alignment: WrapAlignment.spaceAround,
+            children: [
+              _RoundButton(
+                linkTo: "marketplace",
+                icon: Image(image: AssetImage('assets/images/home/event.png')),
+                title: "Event",
+              ),
+              _RoundButton(
+                  linkTo: "marketplace",
+                  icon: Image(image: AssetImage('assets/images/home/recipe.png')),
+                  title: "Recipe"),
+            ],
           ),
-          _RoundButton(
-            linkTo: "marketplace",
-            icon: Icon(Icons.food_bank_outlined),
-          ),
-        ],
+        ),
       )
     ]);
   }
@@ -51,40 +61,63 @@ class _RoundButton extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.linkTo,
+    required this.title,
   }) : super(key: key);
 
   final Widget icon;
   final String linkTo;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GlobalNavigator>(
-      builder: (context, value, child) => IconButton(
-          iconSize: 70,
-          onPressed: () => value.changePage(0, linkTo),
-          icon: GradientShader(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF7F93A3), Color(0xFFFFFFFF)]),
-            child: icon,
-          ),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith((states) {
+    return Column(children: [
+      Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: IconButton(
+            iconSize: 70,
+            onPressed: () => context.push(linkTo),
+            icon: icon,
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.pressed)) {
+                return primaryContainer;
+              } else {
+                return primaryContainer;
+              }
+            }), shadowColor: MaterialStateProperty.resolveWith((states) {
               if (states.contains(MaterialState.pressed)) {
                 return primaryContainer;
               } else {
                 return primary;
               }
-            }),
-            shadowColor: MaterialStateProperty.resolveWith((states) {
+            }), fixedSize: MaterialStateProperty.resolveWith((states) {
               if (states.contains(MaterialState.pressed)) {
-                return primaryContainer;
-              } else {
-                return primary;
+                return Size(80, 80);
               }
-            }),
-          )),
-    );
+              return Size(70, 70);
+            }))),
+      ),
+      SizedBox(
+        width: 100,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Text(
+                    title,
+                    style: TextStyle(fontSize: 15, color: Colors.black),
+                    maxLines: 2,
+                    overflow: TextOverflow.clip,
+                    textAlign: TextAlign.center,
+                  ),
+          ))
+    ]);
   }
 }

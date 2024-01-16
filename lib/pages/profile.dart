@@ -1,6 +1,8 @@
+import 'package:ecomate/provider/auth.dart';
+import 'package:ecomate/widgets/common/custom_form/string_input.dart';
+import 'package:ecomate/widgets/common/modal/custom_modal.dart';
 import 'package:flutter/material.dart';
-import 'package:namer_app/widgets/common/custom_form/string_input.dart';
-import 'package:namer_app/widgets/common/modal/custom_modal.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -25,6 +27,13 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       _emailInput = value ?? "";
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Auth auth = context.read<Auth>();
+    Future.delayed(Duration.zero, () => auth.checkAuth(context));
   }
 
   @override

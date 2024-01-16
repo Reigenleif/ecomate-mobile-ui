@@ -1,35 +1,66 @@
+import 'package:ecomate/styles/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class RoundButton extends ButtonBar {
+class RoundButton extends StatelessWidget {
   RoundButton({
     Key? key,
-    required this.child,
-    required this.onPressed,
+    required this.icon,
+    required this.linkTo,
+    required this.title,
   }) : super(key: key);
 
-  final Widget child;
-  final VoidCallback onPressed;
+  final Widget icon;
+  final String linkTo;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: 60,
-        height: 60,
-        decoration: ShapeDecoration(
-          color: Color(0xFF005244),
-          shape: OvalBorder(),
-          shadows: [
+    return Column(children: [
+      Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
             BoxShadow(
-              color: Color(0x3F000000),
-              blurRadius: 4,
-              offset: Offset(0, 4),
-              spreadRadius: 0,
-            )
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: Offset(0, 5),
+            ),
           ],
         ),
-        child: ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: [child],
-            mainAxisSize: MainAxisSize.min));
+        child: IconButton(
+            iconSize: 70,
+            onPressed: () => context.push(linkTo),
+            icon: icon,
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.pressed)) {
+                return primary;
+              } else {
+                return primaryContainer;
+              }
+            }), shadowColor: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.pressed)) {
+                return primaryContainer;
+              } else {
+                return primary;
+              }
+            }), fixedSize: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.pressed)) {
+                return Size(80, 80);
+              }
+              return Size(70, 70);
+            }))),
+      ),
+      SizedBox(
+        width: 100,
+          child: Text(
+        title,
+        style: TextStyle(fontSize: 15, color: Colors.black),
+        maxLines: 2,
+        overflow: TextOverflow.clip,
+        textAlign: TextAlign.center,
+      ))
+    ]);
   }
 }
