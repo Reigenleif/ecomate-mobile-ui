@@ -589,6 +589,15 @@ final $typed_data.Uint8List updateCartItemRequestDescriptor = $convert.base64Dec
     'ChVVcGRhdGVDYXJ0SXRlbVJlcXVlc3QSFgoGaXRlbUlkGAEgASgJUgZpdGVtSWQSGgoIcXVhbn'
     'RpdHkYAiABKAVSCHF1YW50aXR5');
 
+@$core.Deprecated('Use getRecomendedItemListRequestDescriptor instead')
+const GetRecomendedItemListRequest$json = {
+  '1': 'GetRecomendedItemListRequest',
+};
+
+/// Descriptor for `GetRecomendedItemListRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getRecomendedItemListRequestDescriptor = $convert.base64Decode(
+    'ChxHZXRSZWNvbWVuZGVkSXRlbUxpc3RSZXF1ZXN0');
+
 @$core.Deprecated('Use marketplaceItemListResponseDescriptor instead')
 const MarketplaceItemListResponse$json = {
   '1': 'MarketplaceItemListResponse',

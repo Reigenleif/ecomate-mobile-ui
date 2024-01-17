@@ -1,7 +1,9 @@
 import "package:ecomate/proto/main.pbgrpc.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:grpc/grpc.dart";
 class AuthService {
-  String baseUrl = "example.com";
+  String baseUrl = dotenv.env["GRPC_SERVER_URL"] ?? "";
+  int port = 8080;
 
   AuthService._internal();
   static final AuthService _instance = AuthService._internal();
@@ -21,7 +23,7 @@ class AuthService {
   _createChannel() {
     final channel = ClientChannel(
       baseUrl,
-      port: 443,
+      port: port,
       options: const ChannelOptions(
         credentials: ChannelCredentials.insecure(),
       ),

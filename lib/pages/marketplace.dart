@@ -27,12 +27,12 @@ class _MarketplaceState extends State<Marketplace> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Auth auth = context.read<Auth>();
+      // Auth auth = context.read<Auth>();
 
       MarketplaceState marketplaceState = context.read<MarketplaceState>();
-      marketplaceState.getMarketplaceItems();
+      marketplaceState.getMarketplaceItems().then((v) => print("AS"));
 
-      auth.checkAuth(context);
+      // auth.checkAuth(context);
     });
   }
 
@@ -119,7 +119,9 @@ class _MarketplaceState extends State<Marketplace> {
                           IconButton(
                             iconSize: 30,
                             icon: Icon(Icons.shopping_cart_outlined),
-                            onPressed: () => {},
+                            onPressed: () => {
+                              context.push("/unshell/cart")
+                            },
                           ),
                           IconButton(
                             iconSize: 30,
@@ -147,22 +149,32 @@ class _MarketplaceState extends State<Marketplace> {
                 ),
               ),
 
-              // Categories
-              Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceAround,
-                    spacing: 20,
-                    runSpacing: 20,
-                    children: [
-                      for (var category
-                          in marketplaceState.marketplaceCategoryList)
-                        RoundButton(
-                            icon: Image.network(category.imageUrl ?? ""),
-                            linkTo: "/unshell/product-category/${category.id}",
-                            title: category.name ?? "")
-                    ],
-                  ))
+              // Lazyable part
+              marketplaceState.isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Column(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.only(top: 20),
+                            child: Wrap(
+                              alignment: WrapAlignment.spaceAround,
+                              spacing: 20,
+                              runSpacing: 20,
+                              children: [
+                                for (var category
+                                    in marketplaceState.marketplaceCategoryList)
+                                  RoundButton(
+                                      icon: Image.network(
+                                          category.imageUrl ?? ""),
+                                      linkTo:
+                                          "/unshell/product-category/${category.id}",
+                                      title: category.name ?? "")
+                              ],
+                            )),
+                      ],
+                    )
             ],
           )),
         ),

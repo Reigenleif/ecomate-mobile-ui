@@ -1,5 +1,8 @@
 import 'package:ecomate/proto/main.pbgrpc.dart';
 import 'package:ecomate/services/auth.dart';
+import 'package:ecomate/services/user.dart';
+import 'package:ecomate/utils/storage.dart';
+import 'package:ecomate/utils/token_call_options.dart';
 import 'package:ecomate/widgets/common/auth_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -49,7 +52,9 @@ class Auth extends ChangeNotifier {
       await AuthService.instance.authServiceClient.login(req).then((res) {
         jwtToken = res.accessToken;
 
-        // TODO : set jwt token to local storage
+        storage.write(key: "jwtToken", value: res.accessToken);
+        storage.write(key: "userId", value: res.id);
+        notifyListeners();
       });
     } catch (error) {
       print(error);
@@ -63,17 +68,50 @@ class Auth extends ChangeNotifier {
       await AuthService.instance.authServiceClient.register(req).then((res) {
         jwtToken = res.accessToken;
 
-        // TODO : set jwt token to local storage
+        storage.write(key: "jwtToken", value: res.accessToken);
+        storage.write(key: "userId", value: res.id);
+        notifyListeners();
       });
+      return;
     } catch (error) {
       print(error);
+      return;
     }
   }
 
-  void checkAuth(BuildContext context) {
-    if (jwtToken == '') {
+  Future<bool> checkAuth(BuildContext context) async {
+    final storageJwtToken = await storage.read(key: "jwtToken");
+    print("JWT Token checker: $storageJwtToken");
+
+    final userId = await storage.read(key: "userId");
+    print("UserId Checker : $userId");
+
+    if (storageJwtToken != null && userId != null) {
+      jwtToken = storageJwtToken;
+      return true;
+    } else {
+      showAuthModal(context);
+      return false;
+    }
+
+    final req = GetUserRequest(id: userId);
+    try {
+      await UserService.instance.userServiceClient
+          .getUser(req, options: tokenCallOptions(jwtToken))
+          .then((res) {
+        jwtToken = res.accessToken;
+
+        storage.write(key: "jwtToken", value: res.accessToken);
+        storage.write(key: "userId", value: res.id);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            '/shell/home', (Route<dynamic> route) => false);
+      });
+      notifyListeners();
+      return true;
+    } catch (error) {
       showAuthModal(context);
     }
+    return false;
   }
 
   String getGoogleOAuthToken() {

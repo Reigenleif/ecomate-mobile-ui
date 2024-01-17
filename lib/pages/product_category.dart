@@ -17,12 +17,18 @@ class ProductCategory extends StatefulWidget {
 class _ProductState extends State<ProductCategory> {
   String categoryId = '';
 
+  MarketplaceCategory? currentCategory;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      categoryId = widget.categoryId;
       MarketplaceState marketplaceState = context.read<MarketplaceState>();
-      marketplaceState.getMarketplaceItemListByCategoryId(categoryId);
+      setState(() {
+        currentCategory =
+            marketplaceState.getMarketplaceCategoryById(categoryId);
+      });
     });
   }
 
@@ -133,13 +139,19 @@ class _ProductState extends State<ProductCategory> {
                   child: MenuBar(
                 children: [
                   SubmenuButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateColor.resolveWith(
+                              (states) => primary)),
                       menuChildren: [
                         for (var category
                             in marketplaceState.marketplaceCategoryList)
                           MenuItemButton(
-                            child: Container(color: surface),
+                            child: Container(
+                              color: surface,
+                              child: Text(category.name ?? ""),
+                            ),
                             onPressed: () {
-                              context.go(
+                              context.push(
                                   "/unshell/product-category/${category.id}");
                             },
                           )
@@ -147,14 +159,17 @@ class _ProductState extends State<ProductCategory> {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: primary, width: 2),
-                          color: Colors.transparent,
+                          color: Colors.white,
                         ),
-                        child: const Wrap(
-                          alignment: WrapAlignment.spaceBetween,
-                          children: [
-                            Text("CATEGORY"),
-                            Icon(Icons.arrow_drop_down_outlined)
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            children: [
+                              Text(currentCategory?.name ?? "Select Category"),
+                              Icon(Icons.arrow_drop_down_outlined)
+                            ],
+                          ),
                         ),
                       ))
                 ],
@@ -162,27 +177,45 @@ class _ProductState extends State<ProductCategory> {
 
               // Category content group
               Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Wrap(
-                  spacing: 15,
-                  runSpacing: 15,
-                  children: [
-                    for (var item
-                        in marketplaceState.currentSelectedCategoryItemList)
-                      SizedBox(
-                        width: 170,
-                        height: 200,
-                        child: Column(children: [
-                          Image.network(
-                            item.imageUrl ?? "",
-                            fit: BoxFit.fill,
-                          ),
-                          Text(item.name ?? ""),
-                          Text("Rp. ${item.price ?? ""}"),
-                        ]),
-                      )
-                  ],
-                ),
+                padding: EdgeInsets.only(left: 10, right: 10, top: 25),
+                child: marketplaceState.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Wrap(
+                        spacing: 15,
+                        runSpacing: 15,
+                        children: [
+                          for (var item in currentCategory?.itemList ?? [])
+                            InkWell(
+                              onTap: () {
+                                context.push("/unshell/product/${item.id}");
+                              },
+                              child: Container(
+                                width: 170,
+                                height: 200,
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Theme.of(context).colorScheme.surface,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(children: [
+                                  Image.network(
+                                    item.imageUrl ?? "",
+                                    fit: BoxFit.fill,
+                                  ),
+                                  Text(item.name ?? ""),
+                                  Text("Rp. ${item.price ?? ""}"),
+                                ]),
+                              ),
+                            )
+                        ],
+                      ),
               )
             ],
           )),

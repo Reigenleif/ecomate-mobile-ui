@@ -1,5 +1,7 @@
 import 'package:ecomate/proto/main.pb.dart';
 import 'package:ecomate/services/marketplace.dart';
+import 'package:ecomate/utils/storage.dart';
+import 'package:ecomate/utils/token_call_options.dart';
 import 'package:flutter/material.dart';
 
 class MarketplaceState extends ChangeNotifier {
@@ -8,6 +10,13 @@ class MarketplaceState extends ChangeNotifier {
 
   List<MarketplaceItem> currentSelectedCategoryItemList = [];
   bool isCurrentSelectedCategoryLoading = true;
+
+  Cart? cart;
+  bool isCartLoading = true;
+
+  MarketplaceCategory getMarketplaceCategoryById(String id) {
+    return marketplaceCategoryList.firstWhere((element) => element.id == id);
+  }
 
   // async grpc calls
   Future<List<MarketplaceItem>> getMarketplaceItemListByCategoryId(
@@ -53,6 +62,21 @@ class MarketplaceState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<MarketplaceItem> getMarketplaceItemById(String id) async {
+    GetMarketplaceItemByIdRequest req = GetMarketplaceItemByIdRequest();
+    req.id = id;
+    MarketplaceItemResponse res = await MarketplaceService
+        .instance.marketplaceServiceClient
+        .getMarketplaceItemById(req);
+
+    return MarketplaceItem(
+        id: res.marketplaceItem.id,
+        name: res.marketplaceItem.name,
+        description: res.marketplaceItem.description,
+        price: res.marketplaceItem.price,
+        imageUrl: res.marketplaceItem.imageUrl);
+  }
+
   Future<void> getMarketplaceItemsByCategoryId(String categoryId) async {
     isCurrentSelectedCategoryLoading = true;
     notifyListeners();
@@ -60,6 +84,63 @@ class MarketplaceState extends ChangeNotifier {
         await getMarketplaceItemListByCategoryId(categoryId);
     isCurrentSelectedCategoryLoading = false;
     notifyListeners();
+  }
+
+  Future<void> addItemToCart(String itemId) async {
+    final jwtToken = await storage.read(key: "jwtToken");
+    if (jwtToken == null) {
+      return;
+    }
+    print(jwtToken);
+
+    final getCartReq = GetCartByUserIdRequest();
+    final _ = await MarketplaceService.instance.marketplaceServiceClient
+        .getCartByUserId(getCartReq, options: tokenCallOptions(jwtToken));
+
+    final req = AddCartItemRequest();
+    req.itemId = itemId;
+    req.quantity = 1;
+    await MarketplaceService.instance.marketplaceServiceClient
+        .addCartItem(req, options: tokenCallOptions(jwtToken));
+  }
+
+  Future<void> getCartItemList() async {
+    isCartLoading = true;
+    notifyListeners();
+    final jwtToken = await storage.read(key: "jwtToken");
+    if (jwtToken == null) {
+      return;
+    }
+    print(jwtToken);
+
+    final getCartReq = GetCartByUserIdRequest();
+    final res = await MarketplaceService.instance.marketplaceServiceClient
+        .getCartByUserId(getCartReq, options: tokenCallOptions(jwtToken));
+
+    cart = Cart(cartItemList: [
+      for (var cartItem in res.cartItemList)
+        CartItem(
+            id: cartItem.id,
+            itemId: cartItem.itemId,
+            quantity: cartItem.quantity)
+    ]);
+
+    for (var cartItem in cart!.cartItemList!) {
+      cartItem.marketplaceItem = await getMarketplaceItemById(cartItem.itemId);
+    }
+
+    isCartLoading = false;
+    notifyListeners();
+
+
+  }
+
+  int calculateTotalItemPrice() {
+    int totalPayment = 0;
+    for (var cartItem in cart!.cartItemList!) {
+      totalPayment += cartItem.marketplaceItem!.price! * cartItem.quantity;
+    }
+    return totalPayment;
   }
 }
 
@@ -92,4 +173,23 @@ class MarketplaceCategory {
   final String? description;
   final String? imageUrl;
   List<MarketplaceItem>? itemList;
+}
+
+class Cart {
+  Cart({this.cartItemList});
+
+  final List<CartItem>? cartItemList;
+}
+
+class CartItem {
+  CartItem(
+      {required this.id,
+      required this.itemId,
+      required this.quantity,
+      this.marketplaceItem});
+
+  final String id;
+  final String itemId;
+  final int quantity;
+  MarketplaceItem? marketplaceItem;
 }

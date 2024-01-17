@@ -1,4 +1,5 @@
 import 'package:ecomate/provider/auth.dart';
+import 'package:ecomate/utils/toast.dart';
 import 'package:ecomate/widgets/common/custom_form/string_input.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,16 +8,16 @@ void showAuthModal(BuildContext context) {
   showModalBottomSheet(
     context: context,
     builder: (context) => Container(
-      width: double.maxFinite,
-      height: 500,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+        width: double.maxFinite,
+        padding: EdgeInsets.only(bottom: 30),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
         ),
-      ),
-      child: AuthModal()),
+        child: AuthModal()),
   );
 }
 
@@ -74,17 +75,26 @@ class _AuthModalState extends State<AuthModal> {
           child: Column(children: [
             TextButton(
               onPressed: _onTap("SIGN_IN"),
-              child: Text("Sign In"),
+              child: Container(
+                  width: double.maxFinite,
+                  child: Text(
+                    "Sign In",
+                    textAlign: TextAlign.center,
+                  )),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.primary),
-                foregroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.onPrimary),
-              ),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Theme.of(context).colorScheme.primary),
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                      Theme.of(context).colorScheme.onPrimary)),
             ),
             TextButton(
               onPressed: _onTap("SIGN_UP"),
-              child: Text("Sign Up"),
+              child: Container(
+                  width: double.maxFinite,
+                  child: Text(
+                    "Sign Up",
+                    textAlign: TextAlign.center,
+                  )),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
                     Theme.of(context).colorScheme.primary),
@@ -99,22 +109,28 @@ class _AuthModalState extends State<AuthModal> {
       return Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(children: [
-            TextButton(
-              onPressed: _onTap("CHOOSE"),
-              child: Text("Back"),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.primary),
-                foregroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.onPrimary),
+            Text("Sign In",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Container(
+              width: double.maxFinite,
+              child: Text(
+                "Email",
+                textAlign: TextAlign.left,
               ),
             ),
-            Text("Sign In"),
             StringInput(
               label: "Email",
               value: emailInput,
               onChange: onChangeEmail,
               isAnEmail: true,
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              width: double.maxFinite,
+              child: Text(
+                "Password",
+                textAlign: TextAlign.left,
+              ),
             ),
             StringInput(
                 label: "Password",
@@ -123,8 +139,22 @@ class _AuthModalState extends State<AuthModal> {
                 obscureText: true),
             ButtonBar(
               children: [
+                TextButton(
+                  onPressed: _onTap("CHOOSE"),
+                  child: Text("Back"),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).colorScheme.primary),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ),
                 ElevatedButton(
-                    onPressed: () => auth.signIn(emailInput, passwordInput),
+                    onPressed: () =>
+                        auth.signIn(emailInput, passwordInput).then((value) {
+                          Navigator.pop(context);
+                          toastSuccess(context, "Sign In Success");
+                        }),
                     child: Text("Sign In"))
               ],
             )
@@ -135,28 +165,42 @@ class _AuthModalState extends State<AuthModal> {
       return Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(children: [
-            TextButton(
-              onPressed: _onTap("CHOOSE"),
-              child: Text("Back"),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.primary),
-                foregroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.onPrimary),
+            Text("Sign Up",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Container(
+              width: double.maxFinite,
+              child: Text(
+                "Email",
+                textAlign: TextAlign.left,
               ),
             ),
-            Text("Sign Up"),
             StringInput(
               label: "Email",
               value: emailInput,
               onChange: onChangeEmail,
               isAnEmail: true,
             ),
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              width: double.maxFinite,
+              child: Text(
+                "Password",
+                textAlign: TextAlign.left,
+              ),
+            ),
             StringInput(
                 label: "Password",
                 value: passwordInput,
                 onChange: onChangePassword,
                 obscureText: true),
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              width: double.maxFinite,
+              child: Text(
+                "Retype Password",
+                textAlign: TextAlign.left,
+              ),
+            ),
             StringInput(
                 label: "Confirm Password",
                 value: confirmPasswordInput,
@@ -164,13 +208,27 @@ class _AuthModalState extends State<AuthModal> {
                 obscureText: true),
             ButtonBar(
               children: [
+                TextButton(
+                  onPressed: _onTap("CHOOSE"),
+                  child: Text("Back"),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).colorScheme.primary),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ),
                 ElevatedButton(
-                    onPressed: () => auth.signUp(emailInput, passwordInput),
+                    onPressed: () =>
+                        auth.signUp(emailInput, passwordInput).then((value) {
+                          Navigator.pop(context);
+                          toastSuccess(context, "Sign Up Success");
+                        }),
                     child: Text("Sign Up"))
               ],
             )
           ]));
-    } 
+    }
 
     return Container();
   }

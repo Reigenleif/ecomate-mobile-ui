@@ -2669,6 +2669,38 @@ class UpdateCartItemRequest extends $pb.GeneratedMessage {
   void clearQuantity() => clearField(2);
 }
 
+class GetRecomendedItemListRequest extends $pb.GeneratedMessage {
+  factory GetRecomendedItemListRequest() => create();
+  GetRecomendedItemListRequest._() : super();
+  factory GetRecomendedItemListRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory GetRecomendedItemListRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GetRecomendedItemListRequest', createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  GetRecomendedItemListRequest clone() => GetRecomendedItemListRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  GetRecomendedItemListRequest copyWith(void Function(GetRecomendedItemListRequest) updates) => super.copyWith((message) => updates(message as GetRecomendedItemListRequest)) as GetRecomendedItemListRequest;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetRecomendedItemListRequest create() => GetRecomendedItemListRequest._();
+  GetRecomendedItemListRequest createEmptyInstance() => create();
+  static $pb.PbList<GetRecomendedItemListRequest> createRepeated() => $pb.PbList<GetRecomendedItemListRequest>();
+  @$core.pragma('dart2js:noInline')
+  static GetRecomendedItemListRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GetRecomendedItemListRequest>(create);
+  static GetRecomendedItemListRequest? _defaultInstance;
+}
+
 class MarketplaceItemListResponse extends $pb.GeneratedMessage {
   factory MarketplaceItemListResponse({
     $core.Iterable<MarketplaceItem>? marketplaceItemList,

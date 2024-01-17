@@ -1,6 +1,8 @@
+import 'package:ecomate/pages/cart.dart';
 import 'package:ecomate/pages/home.dart';
 import 'package:ecomate/pages/marketplace.dart';
 import 'package:ecomate/pages/news.dart';
+import 'package:ecomate/pages/product.dart';
 import 'package:ecomate/pages/product_category.dart';
 import 'package:ecomate/pages/profile.dart';
 import 'package:ecomate/provider/auth.dart';
@@ -53,9 +55,10 @@ final _router = GoRouter(
                         )),
                 GoRoute(
                     path: "product/:id",
-                    builder: (context, state) => ProductCategory(
-                          categoryId: state.pathParameters['id'] ?? "",
+                    builder: (context, state) => ProductPage(
+                          productId: state.pathParameters['id'] ?? "",
                         )),
+                GoRoute(path: "cart", builder: (context, state) => CartPage()),
               ],
               builder: (context, state, child) {
                 return Scaffold(
@@ -124,7 +127,7 @@ class _MyAppWrapperState extends State<MyAppWrapper> {
   void Function(int) _onItemTapped(BuildContext context) => (int index) {
         setState(() {
           _selectedIndex = index;
-          context.go(_pages[index]);
+          context.push(_pages[index]);
         });
       };
 

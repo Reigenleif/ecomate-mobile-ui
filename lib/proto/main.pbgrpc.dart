@@ -495,6 +495,10 @@ class MarketplaceClient extends $grpc.Client {
       '/Marketplace/ConfirmCartItem',
       ($0.ConfirmCartItemRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.GeneralStatusResponse.fromBuffer(value));
+  static final _$getRecomendedItemList = $grpc.ClientMethod<$0.GetRecomendedItemListRequest, $0.MarketplaceItemListResponse>(
+      '/Marketplace/getRecomendedItemList',
+      ($0.GetRecomendedItemListRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.MarketplaceItemListResponse.fromBuffer(value));
 
   MarketplaceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -564,6 +568,10 @@ class MarketplaceClient extends $grpc.Client {
 
   $grpc.ResponseFuture<$0.GeneralStatusResponse> confirmCartItem($0.ConfirmCartItemRequest request, {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$confirmCartItem, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.MarketplaceItemListResponse> getRecomendedItemList($0.GetRecomendedItemListRequest request, {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$getRecomendedItemList, request, options: options);
   }
 }
 
@@ -684,6 +692,13 @@ abstract class MarketplaceServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.ConfirmCartItemRequest.fromBuffer(value),
         ($0.GeneralStatusResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetRecomendedItemListRequest, $0.MarketplaceItemListResponse>(
+        'getRecomendedItemList',
+        getRecomendedItemList_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.GetRecomendedItemListRequest.fromBuffer(value),
+        ($0.MarketplaceItemListResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.MarketplaceCategoryListResponse> getMarketplaceCategoryList_Pre($grpc.ServiceCall call, $async.Future<$0.GetMarketplaceCategoryListRequest> request) async {
@@ -750,6 +765,10 @@ abstract class MarketplaceServiceBase extends $grpc.Service {
     return confirmCartItem(call, await request);
   }
 
+  $async.Future<$0.MarketplaceItemListResponse> getRecomendedItemList_Pre($grpc.ServiceCall call, $async.Future<$0.GetRecomendedItemListRequest> request) async {
+    return getRecomendedItemList(call, await request);
+  }
+
   $async.Future<$0.MarketplaceCategoryListResponse> getMarketplaceCategoryList($grpc.ServiceCall call, $0.GetMarketplaceCategoryListRequest request);
   $async.Future<$0.MarketplaceItemListResponse> getMarketplaceItemListByCategoryId($grpc.ServiceCall call, $0.GetMarketplaceItemListByCategoryIdRequest request);
   $async.Future<$0.MarketplaceItemListResponse> getMarketplaceItemList($grpc.ServiceCall call, $0.GetMarketplaceItemListRequest request);
@@ -766,4 +785,5 @@ abstract class MarketplaceServiceBase extends $grpc.Service {
   $async.Future<$0.GeneralStatusResponse> checkOutCartItem($grpc.ServiceCall call, $0.CheckOutCartItemRequest request);
   $async.Future<$0.CartItemListResponse> getCheckedOutItemList($grpc.ServiceCall call, $0.GetCheckedOutItemListRequest request);
   $async.Future<$0.GeneralStatusResponse> confirmCartItem($grpc.ServiceCall call, $0.ConfirmCartItemRequest request);
+  $async.Future<$0.MarketplaceItemListResponse> getRecomendedItemList($grpc.ServiceCall call, $0.GetRecomendedItemListRequest request);
 }
