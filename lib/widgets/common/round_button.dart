@@ -19,7 +19,7 @@ class RoundButton extends StatelessWidget {
     return Column(children: [
       Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),

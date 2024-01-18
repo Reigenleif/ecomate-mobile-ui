@@ -12,6 +12,9 @@ class Auth extends ChangeNotifier {
   static String googleUserId = '';
   static String jwtToken = '';
   static bool isLoading = false;
+
+  static User? userInfo;
+
   GoogleSignIn googleSignIn = GoogleSignIn(
       // Optional clientId
       // clientId: 'your-client_id.apps.googleusercontent.com',
@@ -37,9 +40,17 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(String idToken) async {
+    setIsLoading(true);
     try {
-      await googleSignIn.signIn();
+      final req = LoginRequest(email: idToken);
+      await AuthService.instance.authServiceClient.googleLogin(req).then((res) {
+        jwtToken = res.accessToken;
+
+        storage.write(key: "jwtToken", value: res.accessToken);
+        storage.write(key: "userId", value: res.id);
+        notifyListeners();
+      });
     } catch (error) {
       print(error);
     }
@@ -70,6 +81,59 @@ class Auth extends ChangeNotifier {
 
         storage.write(key: "jwtToken", value: res.accessToken);
         storage.write(key: "userId", value: res.id);
+        notifyListeners();
+      });
+      return;
+    } catch (error) {
+      print(error);
+      return;
+    }
+  }
+
+  Future<void> getSelfUserInfo() async {
+    final storageJwtToken = await storage.read(key: "jwtToken");
+    final userId = await storage.read(key: "userId");
+    print("JWT Token checker: $storageJwtToken");
+
+    final req = GetUserRequest(id: userId);
+    try {
+      await UserService.instance.userServiceClient
+          .getUser(req, options: tokenCallOptions(storageJwtToken ?? ""))
+          .then((res) {
+        userInfo = User(id: res.id, name: res.name, email: res.email);
+        jwtToken = res.accessToken;
+        storage.write(key: "userId", value: res.id);
+        storage.write(key: "jwtToken", value: res.accessToken);
+        notifyListeners();
+      });
+      return;
+    } catch (error) {
+      print(error);
+      return;
+    }
+  }
+
+  Future<void> updateSelfUserInfo(UpdateUserPayload user) async {
+    final storageJwtToken = await storage.read(key: "jwtToken");
+    final userId = await storage.read(key: "userId");
+
+    if (userId == null) {
+      return;
+    }
+
+    final req = UpdateUserRequest(
+        id: userId,
+        name: user.name,
+        email: user.email,
+        password: user.password);
+    try {
+      await UserService.instance.userServiceClient
+          .updateUser(req, options: tokenCallOptions(storageJwtToken ?? ""))
+          .then((res) {
+        userInfo = User(id: res.id, name: res.name, email: res.email);
+        jwtToken = res.accessToken;
+        storage.write(key: "userId", value: res.id);
+        storage.write(key: "jwtToken", value: res.accessToken);
         notifyListeners();
       });
       return;
@@ -117,4 +181,25 @@ class Auth extends ChangeNotifier {
   String getGoogleOAuthToken() {
     return googleOAuthToken;
   }
+
+  User? getUserInfo() {
+    return userInfo;
+  }
+}
+
+class User {
+  String id;
+  String name;
+  String email;
+
+  User({required this.id, required this.name, required this.email});
+}
+
+class UpdateUserPayload {
+  String name;
+  String email;
+  String password;
+
+  UpdateUserPayload(
+      {required this.name, required this.email, required this.password});
 }

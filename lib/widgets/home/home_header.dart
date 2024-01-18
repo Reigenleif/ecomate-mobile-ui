@@ -1,6 +1,8 @@
 import 'package:ecomate/styles/colors.dart';
 import 'package:ecomate/widgets/common/custom_card.dart';
+import 'package:entry/entry.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeHeader extends StatefulWidget {
   HomeHeader({Key? key, required this.onPressed}) : super(key: key);
@@ -51,29 +53,41 @@ class HeaderTopPart extends StatelessWidget {
               Expanded(
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Column(children: [
-                      Text("Jakarta",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: onPrimary, fontSize: 20)),
-                      Text("20°",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: onPrimary, fontSize: 20)),
-                    ])),
+                    child: Wrap(
+                        alignment: WrapAlignment.start,
+                        direction: Axis.vertical,
+                        children: [
+                          Text("Bandung",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: onPrimary,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
+                          Text("26°",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: onPrimary,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
+                        ])),
               ),
               Expanded(
                 child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(children: [
-                      Text("150",
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: onPrimary, fontSize: 24)),
-                      Text("AQI US°",
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: onPrimary, fontSize: 16)),
-                      Text("Unhealthy",
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: onPrimary, fontSize: 24)),
-                    ])),
+                    alignment: Alignment.centerRight,
+                    child: Wrap(
+                        alignment: WrapAlignment.end,
+                        direction: Axis.vertical,
+                        children: [
+                          Text("30",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(color: onPrimary, fontSize: 24)),
+                          Text("AQI US°",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(color: onPrimary, fontSize: 16)),
+                          Text("Healthy",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(color: onPrimary, fontSize: 24)),
+                        ])),
               ),
             ],
           )),
@@ -88,20 +102,28 @@ class HeaderBottomPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        alignment: Alignment.bottomCenter,
-        height: 40,
-        decoration: BoxDecoration(
-          color: primaryContainer,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15)),
-        ),
-        child: Center(
-            child: Text(
-          "More AQI Information →",
-          style: TextStyle(
-              fontWeight: FontWeight.bold, color: primary, fontSize: 18),
-        )));
+    return Entry.offset(
+      delay: Duration(milliseconds: 1000),
+      child: Container(
+          alignment: Alignment.bottomCenter,
+          height: 40,
+          decoration: BoxDecoration(
+            color: primaryContainer,
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15)),
+          ),
+          child: InkWell(
+            onTap: () {
+              context.push('/aqi');
+            },
+            child: Center(
+                child: Text(
+              "More AQI Information →",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: primary, fontSize: 18),
+            )),
+          )),
+    );
   }
 }

@@ -131,8 +131,6 @@ class MarketplaceState extends ChangeNotifier {
 
     isCartLoading = false;
     notifyListeners();
-
-
   }
 
   int calculateTotalItemPrice() {
@@ -141,6 +139,54 @@ class MarketplaceState extends ChangeNotifier {
       totalPayment += cartItem.marketplaceItem!.price! * cartItem.quantity;
     }
     return totalPayment;
+  }
+
+  List<MarketplaceItem> recommendedMarketplaceItemList = [];
+  bool isRandomMarketplaceItemListLoading = true;
+
+  Future<void> getRecommendedMarketplaceItem() async {
+    isRandomMarketplaceItemListLoading = true;
+    notifyListeners();
+    final res = await MarketplaceService.instance.marketplaceServiceClient
+        .getRecomendedItemList(GetRecomendedItemListRequest());
+
+    recommendedMarketplaceItemList = res.marketplaceItemList
+        .map((e) => MarketplaceItem(
+            id: e.id,
+            name: e.name,
+            description: e.description,
+            price: e.price,
+            imageUrl: e.imageUrl))
+        .toList();
+
+    isRandomMarketplaceItemListLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> confirmPayment(BuildContext context) async {
+    final storageJwtToken = await storage.read(key: "jwtToken");
+    final userId = await storage.read(key: "userId");
+
+    final res = await MarketplaceService.instance.marketplaceServiceClient
+        .checkOutCart(CheckOutCartRequest(),
+            options: tokenCallOptions(storageJwtToken ?? ""));
+
+    if (!res.success) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Error"),
+                content:
+                    Text("Error while checking out cart, thats all we know"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+    }
   }
 }
 

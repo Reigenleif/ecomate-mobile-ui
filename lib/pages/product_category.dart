@@ -1,5 +1,6 @@
 import 'package:ecomate/provider/marketplace.dart';
 import 'package:ecomate/styles/colors.dart';
+import 'package:entry/entry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -65,162 +66,183 @@ class _ProductState extends State<ProductCategory> {
             ),
           ),
         ),
-        body: Expanded(
-          child: SingleChildScrollView(
-              child: Column(
-            children: [
-              // Searchbar Group
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Center(
-                  child: Row(children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Theme.of(context).colorScheme.surface,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 8,
-                            offset: Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.search_outlined),
-                          Container(
-                            width: 120,
-                            child: TextFormField(
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12),
-                              decoration: InputDecoration(
-                                hintText: "Search",
-                                border: InputBorder.none,
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 12),
-                                hintStyle: TextStyle(
-                                    color: Colors.black, fontSize: 12),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            iconSize: 30,
-                            icon: Icon(Icons.shopping_cart_outlined),
-                            onPressed: () => {},
-                          ),
-                          IconButton(
-                            iconSize: 30,
-                            icon: Icon(Icons.chat_outlined),
-                            onPressed: () => {},
-                          ),
-                          IconButton(
-                            iconSize: 30,
-                            icon: Icon(Icons.filter_list_outlined),
-                            onPressed: () => {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-
-              // Category navigator
-              Center(
-                  child: MenuBar(
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                  child: Column(
                 children: [
-                  SubmenuButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => primary)),
-                      menuChildren: [
-                        for (var category
-                            in marketplaceState.marketplaceCategoryList)
-                          MenuItemButton(
-                            child: Container(
-                              color: surface,
-                              child: Text(category.name ?? ""),
-                            ),
-                            onPressed: () {
-                              context.push(
-                                  "/unshell/product-category/${category.id}");
-                            },
-                          )
-                      ],
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: primary, width: 2),
-                          color: Colors.white,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Wrap(
-                            alignment: WrapAlignment.spaceBetween,
+                  // Searchbar Group
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(
+                      child: Row(children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Theme.of(context).colorScheme.surface,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Row(
                             children: [
-                              Text(currentCategory?.name ?? "Select Category"),
-                              Icon(Icons.arrow_drop_down_outlined)
+                              Icon(Icons.search_outlined),
+                              Container(
+                                width: 120,
+                                child: TextFormField(
+                                  style:
+                                      TextStyle(color: Colors.black, fontSize: 12),
+                                  decoration: InputDecoration(
+                                    hintText: "Search",
+                                    border: InputBorder.none,
+                                    labelStyle: TextStyle(
+                                        color: Colors.black, fontSize: 12),
+                                    hintStyle: TextStyle(
+                                        color: Colors.black, fontSize: 12),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),
-                      ))
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                iconSize: 30,
+                                icon: Icon(Icons.shopping_cart_outlined),
+                                onPressed: () => {},
+                              ),
+                              IconButton(
+                                iconSize: 30,
+                                icon: Icon(Icons.chat_outlined),
+                                onPressed: () => {},
+                              ),
+                              IconButton(
+                                iconSize: 30,
+                                icon: Icon(Icons.filter_list_outlined),
+                                onPressed: () => {},
+                              ),
+                            ],
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+            
+                  // Category navigator
+                  Center(
+                      child: MenuBar(
+                    children: [
+                      SubmenuButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => primary)),
+                          menuChildren: [
+                            for (var category
+                                in marketplaceState.marketplaceCategoryList)
+                              MenuItemButton(
+                                child: Container(
+                                  color: surface,
+                                  child: Text(category.name ?? ""),
+                                ),
+                                onPressed: () {
+                                  context.push(
+                                      "/unshell/product-category/${category.id}");
+                                },
+                              )
+                          ],
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: primary, width: 2),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Wrap(
+                                alignment: WrapAlignment.spaceBetween,
+                                children: [
+                                  Text(currentCategory?.name ?? "Select Category"),
+                                  Icon(Icons.arrow_drop_down_outlined)
+                                ],
+                              ),
+                            ),
+                          ))
+                    ],
+                  )),
+            
+                  // Category content group
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, top: 25),
+                    child: marketplaceState.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : Wrap(
+                            spacing: 15,
+                            runSpacing: 15,
+                            children: offsetAnimationBuilder([
+                              for (var item in currentCategory?.itemList ?? [])
+                                InkWell(
+                                  onTap: () {
+                                    context.push("/unshell/product/${item.id}");
+                                  },
+                                  child: Container(
+                                    width: 170,
+                                    height: 200,
+                            
+                                    decoration: BoxDecoration(
+                            
+                                      color: Theme.of(context).colorScheme.surface,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 8,
+                                          offset: Offset(0, 5),
+                                        ),
+                                      ],
+                                    ),
+                                    child: ClipRRect(
+                            
+                                      child: Column(children: [
+                                        Image.network(
+                                          item.imageUrl ?? "",
+                                          fit: BoxFit.fill,
+                                          height: 120,
+                                        ),
+                                        Text(item.name ?? ""),
+                                        Text("Rp. ${item.price ?? ""}"),
+                                      ]),
+                                    ),
+                                  ),
+                                )
+                            ]),
+                          ),
+                  )
                 ],
               )),
-
-              // Category content group
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, top: 25),
-                child: marketplaceState.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : Wrap(
-                        spacing: 15,
-                        runSpacing: 15,
-                        children: [
-                          for (var item in currentCategory?.itemList ?? [])
-                            InkWell(
-                              onTap: () {
-                                context.push("/unshell/product/${item.id}");
-                              },
-                              child: Container(
-                                width: 170,
-                                height: 200,
-                                padding: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Theme.of(context).colorScheme.surface,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 8,
-                                      offset: Offset(0, 5),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(children: [
-                                  Image.network(
-                                    item.imageUrl ?? "",
-                                    fit: BoxFit.fill,
-                                  ),
-                                  Text(item.name ?? ""),
-                                  Text("Rp. ${item.price ?? ""}"),
-                                ]),
-                              ),
-                            )
-                        ],
-                      ),
-              )
-            ],
-          )),
+            ),
+          ],
         ),
       );
     });
   }
+}
+
+
+List<Widget> offsetAnimationBuilder(List<Widget> widgetList) {
+  List<Widget> result = [];
+  for (int i = 0; i < widgetList.length; i++) {
+    result.add(Entry.offset(
+      duration: Duration(milliseconds: 500),
+      delay: Duration(milliseconds: 200 * i),
+      child: widgetList[i],
+    ));
+  }
+  return result;
 }

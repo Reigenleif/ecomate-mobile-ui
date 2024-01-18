@@ -1,6 +1,7 @@
 import 'package:ecomate/provider/auth.dart';
 import 'package:ecomate/utils/toast.dart';
 import 'package:ecomate/widgets/common/custom_form/string_input.dart';
+import 'package:ecomate/widgets/common/google_signin_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,8 +72,9 @@ class _AuthModalState extends State<AuthModal> {
   Widget build(BuildContext context) {
     if (_localNav == "CHOOSE") {
       return Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(30.0),
           child: Column(children: [
+            Text("Sign in to continue"),
             TextButton(
               onPressed: _onTap("SIGN_IN"),
               child: Container(
@@ -102,6 +104,15 @@ class _AuthModalState extends State<AuthModal> {
                     Theme.of(context).colorScheme.onPrimary),
               ),
             ),
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              width: double.maxFinite,
+              child: Text(
+                "Or",
+                textAlign: TextAlign.center,
+              ),
+            ),
+            GoogleSignInButton(onSignIn: auth.signInWithGoogle)
           ]));
     }
 
@@ -109,6 +120,7 @@ class _AuthModalState extends State<AuthModal> {
       return Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(children: [
+            Text("Sign in to continue"),
             Text("Sign In",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             Container(
@@ -165,6 +177,7 @@ class _AuthModalState extends State<AuthModal> {
       return Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(children: [
+            Text("Sign in to continue"),
             Text("Sign Up",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             Container(

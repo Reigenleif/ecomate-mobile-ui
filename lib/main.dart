@@ -2,18 +2,22 @@ import 'package:ecomate/pages/cart.dart';
 import 'package:ecomate/pages/home.dart';
 import 'package:ecomate/pages/marketplace.dart';
 import 'package:ecomate/pages/news.dart';
+import 'package:ecomate/pages/aqi.dart';
 import 'package:ecomate/pages/product.dart';
 import 'package:ecomate/pages/product_category.dart';
 import 'package:ecomate/pages/profile.dart';
 import 'package:ecomate/provider/auth.dart';
+import 'package:ecomate/provider/flashcard.dart';
 import 'package:ecomate/provider/marketplace.dart';
 import 'package:ecomate/provider/news.dart';
 import 'package:ecomate/services/auth.dart';
+import 'package:ecomate/services/flashcard.dart';
 import 'package:ecomate/services/marketplace.dart';
 import 'package:ecomate/services/news.dart';
 import 'package:ecomate/styles/colors.dart';
 import 'package:ecomate/styles/texts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +28,12 @@ Future<void> main() async {
   AuthService().init();
   MarketplaceService().init();
   NewsService().init();
+  FlashcardService().init();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => Auth()),
     ChangeNotifierProvider(create: (context) => MarketplaceState()),
     ChangeNotifierProvider(create: (context) => NewsState()),
+    ChangeNotifierProvider(create: (context) => FlashcardState()),
   ], child: MainApp()));
 }
 
@@ -67,13 +73,12 @@ final _router = GoRouter(
               })
         ]),
     GoRoute(
-      path: "/shell",
-      builder: (context, state) => Container(),
+      path: "/",
+      builder: (context, state) => MyAppWrapper(child: HomePage()),
       routes: [
         ShellRoute(
             navigatorKey: _shellNavigatorKey,
             routes: [
-              GoRoute(path: 'home', builder: (context, state) => HomePage()),
               GoRoute(
                 path: 'news',
                 builder: (context, state) => NewsPage(),
@@ -81,6 +86,10 @@ final _router = GoRouter(
               GoRoute(
                 path: 'profile',
                 builder: (context, state) => ProfilePage(),
+              ),
+              GoRoute(
+                path: 'aqi',
+                builder: (context, state) => AqiPage(),
               ),
               // // GoRoute(
               // //   path: '/marketplace',
@@ -94,7 +103,7 @@ final _router = GoRouter(
     ),
   ],
   // debugLogDiagnostics: true,
-  initialLocation: '/shell/home',
+  initialLocation: '/',
 );
 
 class MainApp extends StatelessWidget {
@@ -102,6 +111,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
     return MaterialApp.router(
       routerConfig: _router,
       theme: ThemeData(
@@ -117,12 +130,7 @@ class _MyAppWrapperState extends State<MyAppWrapper> {
   _MyAppWrapperState();
 
   int _selectedIndex = 0;
-  final List<String> _pages = [
-    '/shell/home',
-    '/shell/news',
-    '/shell/activity',
-    '/shell/profile'
-  ];
+  final List<String> _pages = ['/', '/news', '/activity', '/profile'];
 
   void Function(int) _onItemTapped(BuildContext context) => (int index) {
         setState(() {

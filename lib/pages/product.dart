@@ -48,7 +48,7 @@ class _ProductState extends State<ProductPage> {
             actions: [
               IconButton(
                   onPressed: () {
-                    context.push('/marketplace/cart');
+                    context.push('/unshell/cart');
                   },
                   iconSize: 25,
                   icon: Icon(Icons.shopping_cart_outlined))
@@ -60,84 +60,88 @@ class _ProductState extends State<ProductPage> {
               ? Center(
                   child: CircularProgressIndicator(),
                 )
-              : Expanded(
-                  child: SingleChildScrollView(
-                      child: Column(
-                  children: [
-                    FadeInImage(
-                      placeholder: AssetImage("assets/images/placeholder.jpg"),
-                      image: NetworkImage(
-                        item!.imageUrl ?? "",
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: primaryContainer,
-                        border: Border(
-                          bottom: BorderSide(color: primary, width: 1),
-                          top: BorderSide(color: primary, width: 1),
+              : Column(
+                children: [
+                  Expanded(
+                      child: SingleChildScrollView(
+                          child: Column(
+                      children: [
+                        FadeInImage(
+                          placeholder: AssetImage("assets/images/placeholder.jpg"),
+                          image: NetworkImage(
+                            item!.imageUrl ?? "",
+                          ),
+                          fit: BoxFit.fill,
                         ),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(left: 10, top: 20),
-                            width: double.maxFinite,
-                            child: Text(
-                              item!.name!,
-                              style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                              textAlign: TextAlign.left,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: primaryContainer,
+                            border: Border(
+                              bottom: BorderSide(color: primary, width: 1),
+                              top: BorderSide(color: primary, width: 1),
                             ),
                           ),
-                          Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(left: 10, top: 20),
+                                width: double.maxFinite,
+                                child: Text(
+                                  item!.name!,
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 10, top: 10),
+                                width: double.maxFinite,
+                                child: Text(
+                                  "Rp. ${item!.price!.toString()} per kg",
+                                  style:
+                                      TextStyle(fontSize: 20, color: Colors.black),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 7),
+                          child: Container(
                             padding: EdgeInsets.only(left: 10, top: 10),
+                            decoration: BoxDecoration(
+                              color: surface,
+                              border: Border(
+                                bottom: BorderSide(color: primary, width: 1),
+                                top: BorderSide(color: primary, width: 1),
+                              ),
+                            ),
                             width: double.maxFinite,
-                            child: Text(
-                              "Rp. ${item!.price!.toString()} per kg",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
-                              textAlign: TextAlign.left,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Description",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                  textAlign: TextAlign.left,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: Text(item!.description ?? ""),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 7),
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10, top: 10),
-                        decoration: BoxDecoration(
-                          color: surface,
-                          border: Border(
-                            bottom: BorderSide(color: primary, width: 1),
-                            top: BorderSide(color: primary, width: 1),
-                          ),
                         ),
-                        width: double.maxFinite,
-                        child: Column(
-                          children: [
-                            Text(
-                              "Description",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                              textAlign: TextAlign.left,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Text(item!.description ?? ""),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ))),
+                      ],
+                    ))),
+                ],
+              ),
           bottomNavigationBar: Container(
             color: primaryContainer,
             padding: EdgeInsets.all(10),

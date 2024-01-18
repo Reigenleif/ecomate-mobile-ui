@@ -1,4 +1,5 @@
 import 'package:ecomate/widgets/home/home_button_group.dart';
+import 'package:ecomate/widgets/home/home_contents.dart';
 import 'package:ecomate/widgets/home/home_header.dart';
 import 'package:ecomate/widgets/home/home_headline.dart';
 import 'package:flutter/material.dart';
@@ -21,14 +22,19 @@ class _HomeState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(children: [
-          HomeHeadline(),
-          HomeHeader(onPressed: () => {}),
-          HomeButtonGroup()
-        ]),
-      ),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(children: [
+              HomeHeadline(),
+              HomeButtonGroup(),
+              HomeHeader(onPressed: () => {}),
+              HomeContents(),
+            ]),
+          ),
+        ),
+      ],
     );
   }
 }
